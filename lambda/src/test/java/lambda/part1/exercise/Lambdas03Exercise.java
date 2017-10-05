@@ -6,7 +6,10 @@ import java.util.StringJoiner;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings({"Convert2Lambda", "FieldCanBeLocal"})
 public class Lambdas03Exercise {
+
+    //## private int x = 2;
 
     private interface GenericProduct<T> {
         T prod(T a, int i);
@@ -18,21 +21,30 @@ public class Lambdas03Exercise {
 
     @Test
     public void generic0() {
-        final GenericProduct<Integer> prod = null; // Use anonymous class
+        final GenericProduct<Integer> prod = new GenericProduct<Integer>() {  //  Anonymous class
+            @Override
+            public Integer prod(Integer a, int i) {
+                //## System.out.println(x);
+                return a * i;
+            }
+        };
 
         assertEquals(prod.prod(3, 2), Integer.valueOf(6));
     }
 
     @Test
     public void generic1() {
-        final GenericProduct<Integer> prod = null; // Use statement lambda
+        final GenericProduct<Integer> prod = (a, i) -> {  //  statement lambda
+            //## System.out.println(x);
+            return a * i;
+        };
 
         assertEquals(prod.prod(3, 2), Integer.valueOf(6));
     }
 
     @Test
     public void generic2() {
-        final GenericProduct<Integer> prod = null; // Use expression lambda
+        final GenericProduct<Integer> prod =  (a, i) -> a * i; // Use expression lambda
 
         assertEquals(prod.prod(3, 2), Integer.valueOf(6));
     }
@@ -47,7 +59,7 @@ public class Lambdas03Exercise {
 
     @Test
     public void strSum() {
-        final GenericProduct<String> prod = null; // use stringProd;
+        final GenericProduct<String> prod = Lambdas03Exercise::stringProd; // use stringProd;
 
         assertEquals(prod.prod("a", 2), "aa");
     }
@@ -64,10 +76,9 @@ public class Lambdas03Exercise {
 
     @Test
     public void strSum2() {
-        final GenericProduct<String> prod = null; // use stringSumWithDelimeter;
+        final GenericProduct<String> prod = this::stringSumWithDelimeter;
 
         assertEquals(prod.prod("a", 3), "a-a-a");
     }
-
 
 }

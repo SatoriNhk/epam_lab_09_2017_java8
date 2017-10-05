@@ -31,7 +31,7 @@ public class Lambdas03 {
                     }
                 };
 
-        assertEquals(sum.sum(1, 2), Integer.valueOf(3));
+        assertEquals(Integer.valueOf(3), sum.sum(1, 2));
     }
 
     @Test

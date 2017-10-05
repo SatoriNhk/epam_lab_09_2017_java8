@@ -58,7 +58,9 @@ public class Lambdas01 {
         );
 
         Person person = null;
+
         for (Person p : persons) {
+            // if (p.getFirstName().equals("name 1")) {   NPE threat , need to flip
             if ("name 1".equals(p.getFirstName())) {
                 person = p;
                 break;
@@ -69,8 +71,10 @@ public class Lambdas01 {
             person.print();
         }
 
+        //Asserts
         assertNotNull(person);
         assertEquals(new Person("name 1", "lastName 2", 40), person);
+
     }
 
     @Test
@@ -83,13 +87,12 @@ public class Lambdas01 {
 
         final Optional<Person> personOptional =
                 FluentIterable.from(persons)
-                              .firstMatch(new Predicate<Person>() {
-
-                                  @Override
-                                  public boolean apply(Person p) {
-                                        return "name 1".equals(p.getFirstName());
-                                    }
-                              });
+                        .firstMatch(new Predicate<Person>() {
+                            @Override
+                            public boolean apply(Person p) {
+                                return "name 1".equals(p.getFirstName());
+                            }
+                        });
 
         if (personOptional.isPresent()) {
             personOptional.get().print();
@@ -108,12 +111,12 @@ public class Lambdas01 {
 
         final Map<String, Person> personByLastName =
                 FluentIterable.from(persons)
-                              .uniqueIndex(new Function<Person, String>() {
-                                @Override
-                                public String apply(Person person) {
-                                    return person.getLastName();
-                                }
-                              });
+                        .uniqueIndex(new Function<Person, String>() {
+                            @Override
+                            public String apply(Person person) {
+                                return person.getLastName();
+                            }
+                        });
 
         assertEquals(personByLastName.get("lastName 3"), new Person("name 3", "lastName 3", 20));
     }

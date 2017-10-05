@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+@SuppressWarnings("Convert2MethodRef")
+
 public class Lambdas05 {
 
     private <T> void printResult(T t, Function<T, String> function) {
@@ -20,12 +22,22 @@ public class Lambdas05 {
 
     @Test
     public void printField() {
+
+        /*
         printResult(person, new Function<Person, String>() {
             @Override
             public String apply(Person person) {
                 return person.getLastName();
             }
         });
+         */
+
+
+        printResult(person, Person::getLastName);  /// ?!???!?!? apply has a parameter <T>, getLastName has not  ADD COMMENTS
+
+        //BiFunction<Person, String, Person> changeFirstName = Person::withFirstName;
+
+        //printResult(changeFirstName.apply(person, "newName"), Person::getFirstName);
     }
 
 
