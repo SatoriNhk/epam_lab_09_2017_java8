@@ -33,7 +33,7 @@ public class Lambdas05 {
          */
 
 
-        printResult(person, Person::getLastName);  /// ?!???!?!? apply has a parameter <T>, getLastName has not  ADD COMMENTS
+        printResult(person, Person::getLastName);  /// getLastName(Person this)
 
         //BiFunction<Person, String, Person> changeFirstName = Person::withFirstName;
 
@@ -56,13 +56,16 @@ public class Lambdas05 {
 
     @Test
     public void exception() {
-        Runnable r = () -> {
-            //Thread.sleep(100);
+            Runnable r = () -> {
+            //Thread.sleep(100);  // it causes an InterruptedException which is not declared in method run (Runnable interface)
             person.print();
         };
 
         r.run();
     }
+
+
+    // First case
 
     @FunctionalInterface
     private interface DoSomething {
@@ -79,15 +82,43 @@ public class Lambdas05 {
         d.doSmth();
     }
 
-    private String printAndReturn() {
+    private String printAndReturn() {    // even this method returns String it can still be used as method reference where void method is expected
         person.print();
         return person.toString();
     }
 
     @Test
     public void callConflict() {
-        //conflict(this::printAndReturn);
+        //conflict(this::printAndReturn);   // ambiguous -> cant be complied
     }
+
+    // Second case
+
+    @FunctionalInterface
+    private interface DoSomething2 {
+        int doSmth();
+    }
+
+    private void conflict2(Runnable r) {
+        System.out.println("Runnable");
+        r.run();
+    }
+
+    private void conflict2(DoSomething2 d) {
+        System.out.println("DoSomething");
+        d.doSmth();
+    }
+
+    private String printAndReturn2() {
+        person.print();
+        return person.toString();
+    }
+
+    @Test
+    public void callConflict2() {
+        conflict2(this::printAndReturn2);   // ambiguous -> cant be complied
+    }
+
 
     @Test
     public void serializeTree() {
@@ -105,5 +136,5 @@ public class Lambdas05 {
     @Test
     public void factory() {
         withFactory(Person::new);
-    }
+    }   // using constructor as method reference (since java 8)
 }

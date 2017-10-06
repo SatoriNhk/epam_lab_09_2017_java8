@@ -14,7 +14,7 @@ public class ArrowNotationExercise {
     @Test
     public void getAge() {
         // Person -> Integer
-        final Function<Person, Integer> getAge = null; // TODO
+        final Function<Person, Integer> getAge = p -> {if (p != null) return p.getAge(); return null;}; // TODO
 
         assertEquals(Integer.valueOf(33), getAge.apply(new Person("", "", 33)));
     }
@@ -27,7 +27,7 @@ public class ArrowNotationExercise {
         throw new UnsupportedOperationException("Not implemented");
         //assertEquals(true, compareAges.test(new Person("a", "b", 22), new Person("c", "d", 22)));
     }
-
+    // TODO
     // TODO
     // getFullName: Person -> String
 

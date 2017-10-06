@@ -21,7 +21,7 @@ public class Person {
         return firstName;
     }
 
-    public String getLastName(Person this) {
+    public String getLastName(/*Person this*/) {
         return lastName;
     }
 

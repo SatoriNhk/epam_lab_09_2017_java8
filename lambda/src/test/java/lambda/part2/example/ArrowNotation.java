@@ -63,7 +63,7 @@ public class ArrowNotation {
         };
     }
 
-    // (Person -> String) -> Person -> String -> boolean
+    // (Person -> String) -> Person -> String -> boolean          // (Person -> String) -> (Person -> (String -> boolean))
     private static Function<Person, Predicate<String>> propertyChecker2(Function<Person, String> getProperty) {
         return p -> expectedPropValue -> getProperty.apply(p).equals(expectedPropValue);
     }
