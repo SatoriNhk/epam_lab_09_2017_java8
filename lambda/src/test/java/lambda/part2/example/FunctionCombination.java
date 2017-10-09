@@ -5,8 +5,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 
@@ -192,5 +193,35 @@ public class FunctionCombination {
 
     class MyException extends RuntimeException {
 
+    }
+
+    // (int, int, int) -> int
+    public static int sum(int x, int y, int z) {
+        return x + y + z;
+    }
+
+    // int -> int -> int -> int
+    public static Function<Integer, Function<Integer, Function<Integer, Integer>>> curry() {
+        return x -> {
+          return y -> {
+            return z -> {
+                return sum(x, y, z);
+            };
+          };
+        };
+    }
+
+    public void method() {
+        Object a = null;
+        Object b = null;
+
+        boolean eq = (a != null) ? a.equals(b) : b == null;
+        boolean eq7Java = Objects.equals(a, b);
+    }
+
+    @Test
+    public void testCurry() {
+        Supplier<Function<Integer, Function<Integer, Function<Integer, Integer>>>> func = FunctionCombination::curry;
+        assertEquals(6, func.get().apply(1).apply(2).apply(3).intValue());
     }
 }

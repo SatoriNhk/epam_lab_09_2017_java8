@@ -65,7 +65,7 @@ public class Mapping {
                 /*
                 .map(TODO) // Изменить имя всех сотрудников на John .map(e -> e.withPerson(e.getPerson().withFirstName("John")))
                 .map(TODO) // Добавить всем сотрудникам 1 год опыта .map(e -> e.withJobHistory(addOneYear(e.getJobHistory())))
-                .map(TODO) // Заменить все qu на QA
+                .map(TODO) // Заменить все qa на QA
                 * */
                 .getList();
 

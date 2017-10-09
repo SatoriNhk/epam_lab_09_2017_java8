@@ -77,7 +77,7 @@ public class Filtering {
 
         // [T], (T -> boolean) -> [T]
         private FilterUtil<T> filter(Predicate<T> condition) {
-            final List<T> res = new ArrayList<T>();
+            List<T> res = new ArrayList<T>();
             for (T t : list) {
                 if (condition.test(t)) {
                     res.add(t);

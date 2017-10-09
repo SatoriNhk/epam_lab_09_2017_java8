@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.function.Predicate;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -93,10 +92,10 @@ public class FunctionCombinationExercise {
         Predicate<Person> hasEmptyFirstName = p -> p.getFirstName().isEmpty();
         Predicate<Person> hasEmptyLastName = p -> p.getLastName().isEmpty();
 
-        Predicate<Person> validateFirstName = null; // TODO use Predicate::negate
-        Predicate<Person> validateLastName = null; // TODO use Predicate::negate
+        Predicate<Person> validateFirstName = null; // TODO use Predicate->negate
+        Predicate<Person> validateLastName = null; // TODO use Predicate->negate
 
-        Predicate<Person> validate = null; // TODO use Predicate::and
+        Predicate<Person> validate = null; // TODO use Predicate->and
 
         assertTrue(validate.test(new Person("a", "b", 0)));
         assertFalse(validate.test(new Person("", "b", 0)));
