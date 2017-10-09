@@ -4,9 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
-public class Person {
+public class Person implements Comparable<Person>, Serializable {
     private final String firstName;
     private final String lastName;
     private final int age;
@@ -15,6 +17,11 @@ public class Person {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
+        System.out.println("123");
+}
+
+    public static Person create(String firstName, String lastName, int age) {
+        return new Person(firstName, lastName, age);
     }
 
     public String getFirstName() {
@@ -69,11 +76,16 @@ public class Person {
     }
 
     @Override
-    public String toString() {
+    public String toString(Person this) {
         return "Person" + hashCode() + ":{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Person o) {
+        return Integer.compare(age, o.age);
     }
 }

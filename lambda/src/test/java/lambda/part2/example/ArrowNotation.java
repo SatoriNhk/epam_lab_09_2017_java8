@@ -57,20 +57,42 @@ public class ArrowNotation {
 
     // (Person, Person -> String) -> (String -> boolean)
     private static Predicate<String> propertyChecker(Person p, Function<Person, String> getProperty) {
-        return s -> {
+        return string -> {
             String propertyValue = getProperty.apply(p);
-            return s.equals(propertyValue);
+            return string.equals(propertyValue);
         };
     }
 
-    // (Person -> String) -> Person -> String -> boolean          // (Person -> String) -> (Person -> (String -> boolean))
+    // (Person -> String) -> boolean
+    @Test
+    public void checkProperty() {
+        Person person = new Person("a", "b", 0);
+
+        // Person -> String
+        Function<Person, String> getFirstName = new Function<Person, String>() {
+            @Override
+            public String apply(Person person) {
+                return person.getFirstName();
+            }
+        };
+
+        String firstName = getFirstName.apply(person);
+
+        // String -> boolean
+        Predicate<String> checkFirstName = propertyChecker(person, getFirstName);
+
+        assertTrue(checkFirstName.test("a"));
+    }
+
+
+    // (Person -> String) -> (Person -> String -> boolean)
     private static Function<Person, Predicate<String>> propertyChecker2(Function<Person, String> getProperty) {
-        return p -> expectedPropValue -> getProperty.apply(p).equals(expectedPropValue);
+        return person -> expectedPropValue -> getProperty.apply(person).equals(expectedPropValue);
     }
 
     @Test
     public void checkProperty2() {
-        Function<Person, Predicate<String>> ageChecker = propertyChecker2(person1 -> String.valueOf(person1.getAge()));
+        Function<Person, Predicate<String>> ageChecker = propertyChecker2(person -> String.valueOf(person.getAge()));
         Function<Person, Predicate<String>> lastNameChecker = propertyChecker2(Person::getLastName);
 
         Person person = new Person("a", "b", 33);
@@ -79,17 +101,5 @@ public class ArrowNotation {
 
         assertTrue(ageChecker.apply(person).test("33"));
         assertFalse(ageChecker.apply(person).test("44"));
-    }
-
-    @Test
-    public void checkProperty() {
-        Person person = new Person("a", "b", 0);
-
-        // Person -> String
-        Function<Person, String> getFirstName = Person::getFirstName;
-        // String -> boolean
-        Predicate<String> checkFirstName = propertyChecker(person, getFirstName);
-
-        assertTrue(checkFirstName.test("a"));
     }
 }
