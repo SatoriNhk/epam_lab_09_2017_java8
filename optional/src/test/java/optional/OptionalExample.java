@@ -8,11 +8,12 @@ import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings({"Convert2MethodRef", "ExcessiveLambdaUsage", "ResultOfMethodCallIgnored", "OptionalIsPresent"})
 public class OptionalExample {
 
     @Test
     public void get() {
-        final Optional<String> o1 = Optional.empty();
+        Optional<String> o1 = Optional.empty();
 
         o1.ifPresent(s -> System.out.println(s));
 
@@ -23,7 +24,7 @@ public class OptionalExample {
 
     @Test
     public void ifPresent() {
-        final Optional<String> o1 = getOptional();
+        Optional<String> o1 = getOptional();
 
         o1.ifPresent(System.out::println);
 
@@ -34,15 +35,15 @@ public class OptionalExample {
 
     @Test
     public void map() {
-        final Optional<String> o1 = getOptional();
+        Optional<String> o1 = getOptional();
 
-        final Function<String, Integer> getLength = String::length;
+        Function<String, Integer> getLength = String::length;
 
-        final Optional<Integer> expected = o1.map(getLength);
+        Optional<Integer> expected = o1.map(getLength);
 
-        final Optional<Integer> actual;
+        Optional<Integer> actual;
         if (o1.isPresent()) {
-            actual = Optional.of(getLength.apply(o1.get()));
+            actual = Optional.ofNullable(getLength.apply(o1.get()));
         } else {
             actual = Optional.empty();
         }
@@ -50,9 +51,17 @@ public class OptionalExample {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void flatMap() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Test
+    public void filter() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
     private Optional<String> getOptional() {
-        return ThreadLocalRandom.current().nextBoolean()
-            ? Optional.empty()
-            : Optional.of("abc");
+        return ThreadLocalRandom.current().nextBoolean() ? Optional.empty() : Optional.of("abc");
     }
 }
