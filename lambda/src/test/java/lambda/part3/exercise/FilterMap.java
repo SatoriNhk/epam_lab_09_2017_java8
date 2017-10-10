@@ -47,18 +47,26 @@ public class FilterMap {
 
         public LazyCollectionHelper<T> filter(Predicate<T> condition) {
             List<Container<Object, Object>> newActions = new ArrayList<>(actions);
-            newActions.add(new Container<>((Predicate<Object>) condition));
+            newActions.add(new Container<>((Predicate<Object>) condition)); // Type conversion: Predicate<T> -> Predicate<Object>
             return new LazyCollectionHelper<>(list, newActions);
         }
 
         public <R> LazyCollectionHelper<R> map(Function<T, R> function) {
-            // TODO
-            throw new UnsupportedOperationException();
+            List<Container<Object, Object>> newActions = new ArrayList<>(actions);
+            newActions.add(new Container<>((Function<Object, Object>) function));
+            return new LazyCollectionHelper(list, newActions);
         }
 
         public List<T> force() {
-            // TODO
-            throw new UnsupportedOperationException();
+            /*if (list.size() > 0) {
+                for (Container container : actions) {
+                    if (container.getPredicate() != null) {
+                    }
+                    else {
+                    }
+                }
+            }
+            else*/ return list;
         }
     }
 }

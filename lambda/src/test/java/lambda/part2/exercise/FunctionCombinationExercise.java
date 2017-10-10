@@ -25,7 +25,6 @@ public class FunctionCombinationExercise {
     private Predicate<Person> negate1(Predicate<Person> test) {
         return p -> {
             return !test.test(p);
-            //throw new UnsupportedOperationException();
         };
     }
 
@@ -34,7 +33,6 @@ public class FunctionCombinationExercise {
     private Predicate<Person> validateFirstNameAndLastName(Predicate<Person> t1, Predicate<Person> t2) {
         return p -> {
             return t1.test(p) && t2.test(p);
-            //throw new UnsupportedOperationException();
         };
     }
 
@@ -68,7 +66,6 @@ public class FunctionCombinationExercise {
         // TODO
         return T -> {
             return t1.test(T) && t2.test(T);
-            //throw new UnsupportedOperationException();
         };
     }
 
@@ -92,10 +89,10 @@ public class FunctionCombinationExercise {
         Predicate<Person> hasEmptyFirstName = p -> p.getFirstName().isEmpty();
         Predicate<Person> hasEmptyLastName = p -> p.getLastName().isEmpty();
 
-        Predicate<Person> validateFirstName = null; // TODO use Predicate->negate
-        Predicate<Person> validateLastName = null; // TODO use Predicate->negate
+        Predicate<Person> validateFirstName = hasEmptyFirstName.negate(); // TODO use Predicate->negate
+        Predicate<Person> validateLastName = hasEmptyLastName.negate(); // TODO use Predicate->negate
 
-        Predicate<Person> validate = null; // TODO use Predicate->and
+        Predicate<Person> validate = validateFirstName.and(validateLastName); // TODO use Predicate->and
 
         assertTrue(validate.test(new Person("a", "b", 0)));
         assertFalse(validate.test(new Person("", "b", 0)));

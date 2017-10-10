@@ -39,6 +39,8 @@ public class JobHistoryEntry {
         return new JobHistoryEntry(duration, position, employer);
     }
 
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
