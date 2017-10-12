@@ -1,13 +1,17 @@
 package lambda.part3.exercise;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Test;
+
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import static org.junit.Assert.assertEquals;
 
 public class FilterMap {
 
     public static class Container<T, R> {
+
         private final Predicate<T> predicate;
         private final Function<T, R> function;
 
@@ -45,28 +49,62 @@ public class FilterMap {
             this(list, new ArrayList<>());
         }
 
-        public LazyCollectionHelper<T> filter(Predicate<T> condition) {
-            List<Container<Object, Object>> newActions = new ArrayList<>(actions);
-            newActions.add(new Container<>((Predicate<Object>) condition)); // Type conversion: Predicate<T> -> Predicate<Object>
-            return new LazyCollectionHelper<>(list, newActions);
+        public LazyCollectionHelper<T> filter(Predicate<? super T> condition) {
+            List<Container<Object, Object>> actions = new ArrayList<>(this.actions);
+            actions.add(new Container<>((Predicate<Object>) condition));
+            return new LazyCollectionHelper<T>(list, actions);
         }
 
-        public <R> LazyCollectionHelper<R> map(Function<T, R> function) {
-            List<Container<Object, Object>> newActions = new ArrayList<>(actions);
-            newActions.add(new Container<>((Function<Object, Object>) function));
-            return new LazyCollectionHelper(list, newActions);
+        public <R> LazyCollectionHelper<R> map(Function<? super T, ? extends R> function) {
+            List<Container<Object, Object>> actions = new ArrayList<>(this.actions);
+            actions.add(new Container<>((Function<Object, Object>) function));
+            return new LazyCollectionHelper<>((List<R>)list, actions);
         }
 
         public List<T> force() {
-            /*if (list.size() > 0) {
-                for (Container container : actions) {
-                    if (container.getPredicate() != null) {
-                    }
-                    else {
+            if (actions.isEmpty()) {
+                return new ArrayList<>(list);
+            }
+
+            List<T> result = new ArrayList<>();
+            nextValue: for (Object value : list) {
+                for (Container<Object, Object> action : actions) {
+                    Predicate<Object> predicate = action.getPredicate();
+                    if (predicate != null) {
+                        if (!predicate.test(value)) {
+                            continue nextValue;
+                        }
+                    } else {
+                        Function<Object, Object> function = action.getFunction();
+                        value = function.apply(value);
                     }
                 }
+                result.add((T) value);
             }
-            else*/ return list;
+
+            return result;
         }
+    }
+
+    @Test
+    public void test() {
+        List<Integer> integers = Arrays.asList(1, 2, 100, 110, 200, 300, 500);
+
+
+//        LazyCollectionHelper<Integer> lazy = new LazyCollectionHelper<>(integers);
+//        LazyCollectionHelper<Integer> lazy2 = lazy.filter(val -> val != 0);
+//        LazyCollectionHelper<Integer> lazy3 = lazy2.filter(val -> val < 0);
+//        LazyCollectionHelper<Double> lazy4 = lazy3.map(Double::valueOf);
+//
+//        List<Double> lazyResult = lazy4.force();
+
+
+        List<String> result = new LazyCollectionHelper<>(integers).filter(val -> val > 10)
+                                                                  .filter(val -> val < 400)
+                                                                  .map(Object::toString)
+                                                                  .filter(str -> str.startsWith("1"))
+                                                                  .force();
+
+        assertEquals(Arrays.asList("100", "110"), result);
     }
 }
