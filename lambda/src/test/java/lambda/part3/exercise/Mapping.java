@@ -109,7 +109,13 @@ public class Mapping {
 
     private static class LazyMapHelper<T, R> {
 
+        //List<Function<T, R>> functions;
+        List<T> list;
+        Function<T, R> function;
+
         public LazyMapHelper(List<T> list, Function<T, R> function) {
+            this.list = list;
+            this.function = function;
         }
 
         public static <T> LazyMapHelper<T, T> from(List<T> list) {
@@ -117,13 +123,15 @@ public class Mapping {
         }
 
         public List<R> force() {
-            // TODO
-            throw new UnsupportedOperationException();
+            List<R> newList = new ArrayList<>();
+            for (T elem: list) {
+                newList.add(this.function.apply(elem));
+            }
+            return newList;
         }
 
         public <R2> LazyMapHelper<T, R2> map(Function<R, R2> f) {
-            // TODO
-            throw new UnsupportedOperationException();
+            return new LazyMapHelper<>(this.list, this.function.andThen(f));
         }
     }
 
@@ -153,11 +161,9 @@ public class Mapping {
         );
 
         List<Employee> mappedEmployees = LazyMapHelper.from(employees)
-                /*
-                .map(TODO) // Изменить имя всех сотрудников на John .map(e -> e.withPerson(e.getPerson().withFirstName("John")))
-                .map(TODO) // Добавить всем сотрудникам 1 год опыта .map(e -> e.withJobHistory(addOneYear(e.getJobHistory())))
-                .map(TODO) // Заменить все qu на QA
-                */
+                .map(e -> e.withPerson(e.getPerson().withFirstName("John")))     // Изменить имя всех сотрудников на John .map(e -> e.withPerson(e.getPerson().withFirstName("John")))
+                .map(e -> e.withJobHistory(addOneYear(e.getJobHistory()))) // Добавить всем сотрудникам 1 год опыта .map(e -> e.withJobHistory(addOneYear(e.getJobHistory())))
+                .map(e -> e.withJobHistory(changeQaToQA(e.getJobHistory()))) // Заменить все qa на QA
                 .force();
 
         List<Employee> expectedResult = Arrays.asList(

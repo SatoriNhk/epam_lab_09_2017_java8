@@ -62,29 +62,31 @@ public class FilterMap {
         }
 
         public List<T> force() {
-            if (actions.isEmpty()) {
-                return new ArrayList<>(list);
-            }
 
-            List<T> result = new ArrayList<>();
-            nextValue: for (Object value : list) {
-                for (Container<Object, Object> action : actions) {
-                    Predicate<Object> predicate = action.getPredicate();
-                    if (predicate != null) {
-                        if (!predicate.test(value)) {
-                            continue nextValue;
+            if (!actions.isEmpty()) {
+
+                List<T> result = new ArrayList<>();
+                nextValue: for (T value : list) {
+                    for (Container action : actions) {
+                        Predicate<Object> predicate = action.getPredicate();
+                        if (predicate != null) {
+                            if(!predicate.test(value)) {
+                                continue nextValue;
+                            }
+                        } else {
+                            Function<Object, Object> function = action.getFunction();
+                            value = (T) function.apply(value);
                         }
-                    } else {
-                        Function<Object, Object> function = action.getFunction();
-                        value = function.apply(value);
                     }
+                    result.add(value);
                 }
-                result.add((T) value);
+                return result;
             }
-
-            return result;
+            else return new ArrayList<>(list);
         }
     }
+
+
 
     @Test
     public void test() {
