@@ -8,6 +8,7 @@
 
     <modules>
         <module>lambda</module>
+        <module>optional</module>
         <module>streams</module>
     </modules>
 

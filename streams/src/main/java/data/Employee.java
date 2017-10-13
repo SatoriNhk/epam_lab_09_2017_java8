@@ -21,7 +21,7 @@ public class Employee {
         return new Employee(person, h);
     }
 
-    public Person getPerson() {
+    public Person getPerson(Employee this) {
         return person;
     }
 
