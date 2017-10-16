@@ -12,7 +12,6 @@ public class Person implements Comparable<Person>, Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        System.out.println("123");
 }
 
     public static Person create(String firstName, String lastName, int age) {
