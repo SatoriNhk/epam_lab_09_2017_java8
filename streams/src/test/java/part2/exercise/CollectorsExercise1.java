@@ -33,6 +33,14 @@ public class CollectorsExercise1 {
         }
     }
 
+
+    // "epam" -> "Alex Ivanov 23, Semen Popugaev 25, Ivan Ivanov 33"
+    @Test
+    public void getEmployeesByEmployer() {
+        Map<String, String> result = null;
+
+    }
+
     @Test
     public void getTheCoolestOne() {
         final Map<String, Person> coolestByPosition = getCoolestByPosition(getEmployees());
@@ -51,12 +59,6 @@ public class CollectorsExercise1 {
         // iterate twice: stream...collect(...).stream()...
         // TODO
         throw new UnsupportedOperationException();
-    }
-
-    @Test
-    public void getEmployeesByEmployer() {
-        final Map<String, String> coolestByPosition = null;
-
     }
 
     private List<Employee> getEmployees() {

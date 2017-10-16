@@ -33,9 +33,7 @@ public class CollectorsExample {
     public void incorrectReducePersonsToString() {
         Stream<Person> personStream = getPersonStream();
 
-        // a + (b + c) == (a + b) + c
-        // [a, b, c, d] -> [[a, b], [c, d]]
-        String result = personStream//.parallel()
+        String result = personStream.parallel()
                 // .reduce((a, b) -> ???) Optional<T> reduce(BinaryOperator<T> accumulator)
                 // .reduce(zeroPerson, (a, b) -> ???) T reduce(T identity, BinaryOperator<T> accumulator)
                 //     <U> U reduce(U identity,
@@ -52,7 +50,7 @@ public class CollectorsExample {
     @Test
     public void incorrectCollectPersonsToString() {
         StringBuilder res = getPersonStream().parallel()
-                                            //.unordered()
+                                             .unordered()
                                              .collect(StringBuilder::new, // synchronization is in Stream
                                                       (builder, person) -> builder.append("\n and ").append(person),
                                                       (builder1, builder2) -> builder1.append("\n and ").append(builder2)
@@ -65,21 +63,46 @@ public class CollectorsExample {
 
     @Test
     public void collectPersonToString1() {
-//        StringJoiner res = getPersonStream().parallel();
-//                                            .collect(() -> new StringJoiner("\n and "), // synchronization is in Stream
-//                                                     (joiner, person) -> joiner.add(person.toString()),
-//                                                     (joiner1, joiner2) -> joiner1.merge(joiner2)
-//                                            );
+        StringJoiner res = getPersonStream().parallel()
+                                            .collect(() -> new StringJoiner("\n and "), // synchronization is in Stream
+                                                     (joiner, person) -> joiner.add(person.toString()),
+                                                     StringJoiner::merge
+                                            );
 
-//        String result = res.toString();
+        String result = res.toString();
 
-//        System.out.println(result);
+        System.out.println(result);
     }
 
     @Test
     public void collectPersonToString2() {
         String result = getPersonStream().parallel()
-                .collect(null // new Collector
+                .collect(new Collector<Person, StringJoiner, String>() {
+                             @Override
+                             public Supplier<StringJoiner> supplier() {
+                                 return () -> new StringJoiner("\n and ");
+                             }
+
+                             @Override
+                             public BiConsumer<StringJoiner, Person> accumulator() {
+                                 return (joiner, person) -> joiner.add(person.toString());
+                             }
+
+                             @Override
+                             public BinaryOperator<StringJoiner> combiner() {
+                                 return StringJoiner::merge;
+                             }
+
+                             @Override
+                             public Function<StringJoiner, String> finisher() {
+                                 return StringJoiner::toString;
+                             }
+
+                             @Override
+                             public Set<Characteristics> characteristics() {
+                                 return Collections.emptySet();
+                             }
+                         }
                 );
 
         System.out.println(result);
