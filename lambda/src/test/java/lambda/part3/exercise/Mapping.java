@@ -109,7 +109,6 @@ public class Mapping {
 
     private static class LazyMapHelper<T, R> {
 
-        //List<Function<T, R>> functions;
         List<T> list;
         Function<T, R> function;
 

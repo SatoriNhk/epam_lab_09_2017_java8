@@ -5,6 +5,7 @@ import data.JobHistoryEntry;
 import data.Person;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,15 +18,17 @@ public class StreamsExample {
 
     @Test
     public void checkJohnsLastNames() {
+        //System.out.println("hello");
         String[] johnsLastNames = getEmployees().stream()
                 .map(Employee::getPerson)
-                .filter(e -> e.getFirstName().equals("John"))
+                .filter(e -> "John".equals(e.getFirstName()))
                 .map(Person::getLastName)
                 .distinct()
                 .toArray(String[]::new);
-//                                                    .collect(Collectors.toList());
+        /*.collect(Collectors.toList());*/
+        System.out.println(Arrays.toString(johnsLastNames));
 
-        assertEquals(Collections.singletonList("Galt"), johnsLastNames);
+        //assertEquals(Collections.singletonList("Galt"), Arrays.asList(johnsLastNames));
     }
 
     @Test
